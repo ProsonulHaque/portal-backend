@@ -12,13 +12,13 @@ public class CompanyBrandingFile : IBaseEntity
         FileContent = null!;
     }
 
-    public CompanyBrandingFile(Guid id, string fileName, CompanyBrandingAssetTypeId companyBrandingAssetTypeId, MediaTypeId mediaTypeId, long fileSizeInBytes, byte[] fileContent, Guid companyId, DateTimeOffset dateCreated) : this()
+    public CompanyBrandingFile(Guid id, string fileName, CompanyBrandingAssetTypeId companyBrandingAssetTypeId, MediaTypeId mediaTypeId, long fileSizeInKiloBytes, byte[] fileContent, Guid companyId, DateTimeOffset dateCreated) : this()
     {
         Id = id;
         FileName = fileName;
         CompanyBrandingAssetTypeId = companyBrandingAssetTypeId;
         MediaTypeId = mediaTypeId;
-        FileSizeInBytes = fileSizeInBytes;
+        FileSizeInKiloByte = fileSizeInKiloBytes;
         FileContent = fileContent;
         CompanyId = companyId;
         DateCreated = dateCreated;
@@ -32,7 +32,7 @@ public class CompanyBrandingFile : IBaseEntity
 
     public MediaTypeId MediaTypeId { get; set; }
 
-    public long FileSizeInBytes { get; set; }
+    public long FileSizeInKiloByte { get; set; }
 
     public byte[] FileContent { get; set; }
 
