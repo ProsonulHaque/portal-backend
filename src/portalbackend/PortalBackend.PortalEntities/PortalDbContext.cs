@@ -198,6 +198,8 @@ public class PortalDbContext(DbContextOptions<PortalDbContext> options, IAuditHa
     public virtual DbSet<AgreementView> AgreementView { get; set; } = default!;
     public virtual DbSet<CompanyWalletData> CompanyWalletDatas { get; set; } = default!;
     public virtual DbSet<AgreementDescription> AgreementDescriptions { get; set; } = default!;
+    public virtual DbSet<CompanyBrandingFile> CompanyBrandingFiles { get; set; } = default!;
+    public virtual DbSet<CompanyBrandingText> CompanyBrandingTexts { get; set; } = default!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -1493,6 +1495,13 @@ public class PortalDbContext(DbContextOptions<PortalDbContext> options, IAuditHa
 
         modelBuilder.Entity<Address>()
             .Property(t => t.Region).HasDefaultValue("");
+
+        modelBuilder.Entity<CompanyBrandingAssetType>()
+            .HasData(
+                Enum.GetValues(typeof(CompanyBrandingAssetTypeId))
+                    .Cast<CompanyBrandingAssetTypeId>()
+                    .Select(x => new CompanyBrandingAssetType(x))
+            );
     }
 
     /// <inheritdoc />
