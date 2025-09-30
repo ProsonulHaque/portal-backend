@@ -66,6 +66,7 @@ public class PortalRepositories(PortalDbContext portalDbContext) :
         CreateTypeEntry<IUserBusinessPartnerRepository>(context => new UserBusinessPartnerRepository(context)),
         CreateTypeEntry<IUserRepository>(context => new UserRepository(context)),
         CreateTypeEntry<IUserRolesRepository>(context => new UserRolesRepository(context)),
-        CreateTypeEntry<ICompanyCertificateRepository>(context => new CompanyCertificateRepository(context))
+        CreateTypeEntry<ICompanyCertificateRepository>(context => new CompanyCertificateRepository(context)),
+        CreateTypeEntry<ICompanyBrandingRepository>(context => new CompanyBrandingRepository(context))
     ]);
 }

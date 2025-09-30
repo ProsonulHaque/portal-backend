@@ -64,11 +64,11 @@ public static class MediaTypeIdExtensions
         };
     }
 
-    public static void CheckDocumentContentType(this MediaTypeId mediaTypeId, IEnumerable<MediaTypeId> validMediaTypes)
+    public static void CheckFileContentType(this MediaTypeId mediaTypeId, IEnumerable<MediaTypeId> validMediaTypes)
     {
         if (!validMediaTypes.Contains(mediaTypeId))
         {
-            throw new UnsupportedMediaTypeException($"Document type not supported. File must match contentTypes :{string.Join(",", validMediaTypes.Select(x => x.MapToMediaType()))}");
+            throw new UnsupportedMediaTypeException($"File type not supported. File must match contentTypes :{string.Join(",", validMediaTypes.Select(x => x.MapToMediaType()))}");
         }
     }
 }

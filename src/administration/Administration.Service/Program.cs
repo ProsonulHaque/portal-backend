@@ -95,6 +95,8 @@ await WebAppHelper
             .AddNetworkRegistrationProcessHelper()
             .AddIssuerComponentService(builder.Configuration.GetSection("Issuer"));
 
+        builder.Services.AddTransient<ICompanyBrandingBusinessLogic, CompanyBrandingBusinessLogic>();
+
         builder.Services
             .AddSingleton<IErrorMessageService, ErrorMessageService>()
             .AddSingleton<IErrorMessageContainer, AdministrationCompanyDataErrorMessageContainer>()
@@ -106,6 +108,7 @@ await WebAppHelper
             .AddSingleton<IErrorMessageContainer, AdministrationRegistrationErrorMessageContainer>()
             .AddSingleton<IErrorMessageContainer, AdministrationServiceAccountErrorMessageContainer>()
             .AddSingleton<IErrorMessageContainer, AdministrationSubscriptionConfigurationErrorMessageContainer>()
+            .AddSingleton<IErrorMessageContainer, AdministrationCompanyBrandingErrorMessageContainer>()
             .AddSingleton<IErrorMessageContainer, ProvisioningServiceErrorMessageContainer>()
             .AddSingleton<IErrorMessageContainer, RegistrationValidationErrorMessageContainer>()
             .AddSingleton<IErrorMessageContainer, ValidationExpressionErrorMessageContainer>();

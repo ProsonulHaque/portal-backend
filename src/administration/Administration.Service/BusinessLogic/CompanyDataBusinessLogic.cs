@@ -275,7 +275,7 @@ public class CompanyDataBusinessLogic(
         }
 
         var documentContentType = data.Document.ContentType.ParseMediaTypeId();
-        documentContentType.CheckDocumentContentType(_settings.CompanyCertificateMediaTypes);
+        documentContentType.CheckFileContentType(_settings.CompanyCertificateMediaTypes);
 
         var companyCertificateRepository = portalRepositories.GetInstance<ICompanyCertificateRepository>();
         if (!await companyCertificateRepository.CheckCompanyCertificateType(data.CertificateType).ConfigureAwait(ConfigureAwaitOptions.None))

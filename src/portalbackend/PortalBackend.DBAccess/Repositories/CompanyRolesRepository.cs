@@ -120,4 +120,6 @@ public class CompanyRolesRepository : ICompanyRolesRepository
                 companyRole.CompanyRoleDescriptions.SingleOrDefault(desc =>
                     desc.LanguageShortName == (languageShortName ?? Constants.DefaultLanguage))!.Description
             )).AsAsyncEnumerable();
+    public async Task<bool> DoesCompanyHaveSpecificRoleAsync(Guid companyId, CompanyRoleId companyRoleId) =>
+        await _dbContext.CompanyAssignedRoles.AnyAsync(x => x.CompanyId == companyId && x.CompanyRoleId == companyRoleId);
 }
