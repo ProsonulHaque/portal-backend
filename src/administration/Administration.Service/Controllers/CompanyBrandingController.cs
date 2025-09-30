@@ -4,7 +4,9 @@ using Org.Eclipse.TractusX.Portal.Backend.Administration.Service.BusinessLogic;
 using Org.Eclipse.TractusX.Portal.Backend.Administration.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Web;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Web;
+using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.PortalEntities.Enums;
 using Org.Eclipse.TractusX.Portal.Backend.Web.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Org.Eclipse.TractusX.Portal.Backend.Administration.Service.Controllers;
 
@@ -12,6 +14,53 @@ namespace Org.Eclipse.TractusX.Portal.Backend.Administration.Service.Controllers
 [EnvironmentRoute("MVC_ROUTING_BASEPATH", "branding/assets")]
 public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLogic) : ControllerBase
 {
+    [HttpGet]
+    [Route("logo", Name = nameof(GetCompanyBrandingLogoAsync))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> GetCompanyBrandingLogoAsync([FromQuery][Required(ErrorMessage = "Provide company id")] Guid companyId)
+    {
+        var companyBrandingLogo = await businessLogic.GetCompanyBrandingFileAsync(companyId, CompanyBrandingAssetTypeId.LOGO).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        return File
+        (
+            companyBrandingLogo.FileContent,
+            companyBrandingLogo.FileMediaType,
+            companyBrandingLogo.FileName
+        );
+    }
+
+    [HttpGet]
+    [Route("footer", Name = nameof(GetCompanyBrandingFooterAsync))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> GetCompanyBrandingFooterAsync([FromQuery][Required(ErrorMessage = "Provide company id")] Guid companyId)
+    {
+        var companyBrandingFooter = await businessLogic.GetCompanyBrandingTextAsync(companyId, CompanyBrandingAssetTypeId.FOOTER).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        return Ok(new { CompanyBrandingFooter = companyBrandingFooter });
+    }
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> GetCompanyBrandingAssetsAsync([FromQuery][Required(ErrorMessage = "Provide company id")] Guid companyId)
+    {
+        var companyBrandingFooter = await businessLogic.GetCompanyBrandingTextAsync(companyId, CompanyBrandingAssetTypeId.FOOTER).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        var companyBrandingAssetsResponse = new CompanyBrandingAssetsResponse
+        (
+            companyId,
+            CompanyBrandingLogoUrl: Url.Link(nameof(GetCompanyBrandingLogoAsync), new { companyId })!,
+            companyBrandingFooter
+        );
+
+        return Ok(companyBrandingAssetsResponse);
+    }
+
     [HttpPost]
     [Route("logo")]
     [Authorize(Roles = "manage_branding_assets")]
@@ -23,10 +72,9 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status415UnsupportedMediaType)]
     public async Task<IActionResult> SaveCompanyBrandingLogoAsync([FromForm] CompanyBrandingLogoData companyBrandingLogoData)
     {
-        var logoFileId = await businessLogic.SaveCompanyBrandingLogoAsync(companyBrandingLogoData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
+        var (logoId, companyId) = await businessLogic.SaveCompanyBrandingLogoAsync(companyBrandingLogoData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
 
-        return Created();
-        //return CreatedAtRoute(nameof(), new { logoFileId = logoFileId });
+        return CreatedAtRoute(nameof(GetCompanyBrandingLogoAsync), new { companyId }, logoId);
     }
 
     [HttpPost]
@@ -39,9 +87,8 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> SaveCompanyBrandingFooterAsync([FromBody] CompanyBrandingFooterData companyBrandingFooterData)
     {
-        var footerId = await businessLogic.SaveCompanyBrandingFooterAsync(companyBrandingFooterData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
+        var (footerId, companyId) = await businessLogic.SaveCompanyBrandingFooterAsync(companyBrandingFooterData).ConfigureAwait(ConfigureAwaitOptions.None);
 
-        return Created();
-        //return CreatedAtRoute(nameof(), new { footerId = footerId });
+        return CreatedAtRoute(nameof(GetCompanyBrandingFooterAsync), new { companyId }, footerId);
     }
 }

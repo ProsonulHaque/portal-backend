@@ -1,3 +1,4 @@
+using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.DBAccess.Models;
 using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.PortalEntities.Entities;
 using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.PortalEntities.Enums;
 
@@ -21,4 +22,8 @@ public interface ICompanyBrandingRepository
         Guid companyId);
 
     Task<bool> DoesCompanyBrandingTextExistAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
+
+    Task<FileData> GetCompanyBrandingFileAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
+
+    Task<string?> GetCompanyBrandingTextAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
 }

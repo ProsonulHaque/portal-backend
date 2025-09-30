@@ -5,6 +5,7 @@ using Org.Eclipse.TractusX.Portal.Backend.Framework.Identity;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Web;
 using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.DBAccess;
 using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.DBAccess.Extensions;
+using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.DBAccess.Models;
 using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.DBAccess.Repositories;
 using Org.Eclipse.TractusX.Portal.Backend.PortalBackend.PortalEntities.Enums;
 
@@ -15,7 +16,7 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
     private readonly IIdentityData _identityData = identityService.IdentityData;
     private const long OneMegabyteInBytes = 1024 * 1024;
 
-    public async Task<Guid> SaveCompanyBrandingLogoAsync(CompanyBrandingLogoData companyBrandingLogoData, CancellationToken cancellationToken)
+    public async Task<(Guid logoId, Guid companyId)> SaveCompanyBrandingLogoAsync(CompanyBrandingLogoData companyBrandingLogoData, CancellationToken cancellationToken)
     {
         var companyHasOperatorRole = await portalRepositories.GetInstance<ICompanyRolesRepository>().DoesCompanyHaveSpecificRoleAsync(companyId: _identityData.CompanyId, companyRoleId: CompanyRoleId.OPERATOR).ConfigureAwait(ConfigureAwaitOptions.None);
 
@@ -54,10 +55,10 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
 
         await portalRepositories.SaveAsync().ConfigureAwait(ConfigureAwaitOptions.None);
 
-        return companyBrandingFile.Id;
+        return (companyBrandingFile.Id, _identityData.CompanyId);
     }
 
-    public async Task<Guid> SaveCompanyBrandingFooterAsync(CompanyBrandingFooterData companyBrandingFooterData, CancellationToken cancellationToken)
+    public async Task<(Guid footerId, Guid companyId)> SaveCompanyBrandingFooterAsync(CompanyBrandingFooterData companyBrandingFooterData)
     {
         var companyHasOperatorRole = await portalRepositories.GetInstance<ICompanyRolesRepository>().DoesCompanyHaveSpecificRoleAsync(companyId: _identityData.CompanyId, companyRoleId: CompanyRoleId.OPERATOR).ConfigureAwait(ConfigureAwaitOptions.None);
 
@@ -73,13 +74,51 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
             throw ConflictException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_CONFLICT_ASSET_EXISTS);
         }
 
-        var companyBrandingFooter = portalRepositories.GetInstance<ICompanyBrandingRepository>().CreateCompanyBrandingText(
+        var companyBrandingText = portalRepositories.GetInstance<ICompanyBrandingRepository>().CreateCompanyBrandingText(
             footer: companyBrandingFooterData.Footer,
             companyBrandingAssetTypeId: CompanyBrandingAssetTypeId.FOOTER,
             companyId: _identityData.CompanyId);
 
         await portalRepositories.SaveAsync().ConfigureAwait(ConfigureAwaitOptions.None);
 
-        return companyBrandingFooter.Id;
+        return (companyBrandingText.Id, _identityData.CompanyId);
+    }
+
+    public async Task<FileData> GetCompanyBrandingFileAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId)
+    {
+        var companyExists = await portalRepositories.GetInstance<ICompanyRepository>().IsExistingCompany(companyId).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        if (!companyExists)
+        {
+            throw ControllerArgumentException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_ARGUMENT_COMPANY_ID_NOT_VALID, [new ErrorParameter(nameof(companyId), companyId.ToString())]);
+        }
+
+        var companyBrandingFile = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingFileAsync(companyId, assetTypeId).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        if (companyBrandingFile.IsDefault())
+        {
+            throw ConflictException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_CONFLICT_ASSET_NOT_EXIST);
+        }
+
+        return companyBrandingFile;
+    }
+
+    public async Task<string> GetCompanyBrandingTextAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId)
+    {
+        var companyExists = await portalRepositories.GetInstance<ICompanyRepository>().IsExistingCompany(companyId).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        if (!companyExists)
+        {
+            throw ControllerArgumentException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_ARGUMENT_COMPANY_ID_NOT_VALID, [new ErrorParameter(nameof(companyId), companyId.ToString())]);
+        }
+
+        var companyBrandingText = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingTextAsync(companyId, assetTypeId).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        if (companyBrandingText == default)
+        {
+            throw ConflictException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_CONFLICT_ASSET_NOT_EXIST);
+        }
+
+        return companyBrandingText;
     }
 }
