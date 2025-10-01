@@ -72,9 +72,9 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status415UnsupportedMediaType)]
     public async Task<IActionResult> SaveCompanyBrandingLogoAsync([FromForm] CompanyBrandingLogoData companyBrandingLogoData)
     {
-        var (logoId, companyId) = await businessLogic.SaveCompanyBrandingLogoAsync(companyBrandingLogoData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
+        var logoId = await businessLogic.SaveCompanyBrandingLogoAsync(companyBrandingLogoData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
 
-        return CreatedAtRoute(nameof(GetCompanyBrandingLogoAsync), new { companyId }, logoId);
+        return CreatedAtRoute(nameof(GetCompanyBrandingLogoAsync), new { companyBrandingLogoData.CompanyId }, logoId);
     }
 
     [HttpPost]
@@ -87,8 +87,23 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> SaveCompanyBrandingFooterAsync([FromBody] CompanyBrandingFooterData companyBrandingFooterData)
     {
-        var (footerId, companyId) = await businessLogic.SaveCompanyBrandingFooterAsync(companyBrandingFooterData).ConfigureAwait(ConfigureAwaitOptions.None);
+        var footerId = await businessLogic.SaveCompanyBrandingFooterAsync(companyBrandingFooterData).ConfigureAwait(ConfigureAwaitOptions.None);
 
-        return CreatedAtRoute(nameof(GetCompanyBrandingFooterAsync), new { companyId }, footerId);
+        return CreatedAtRoute(nameof(GetCompanyBrandingFooterAsync), new { companyBrandingFooterData.CompanyId }, footerId);
+    }
+
+    [HttpPut]
+    [Route("logo/{companyId}")]
+    [Authorize(Roles = "manage_branding_assets")]
+    [Authorize(Policy = PolicyTypes.ValidCompany)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateCompanyBrandingLogoAsync([FromRoute] Guid companyId, [FromForm] CompanyBrandingLogoUpdateData companyBrandingLogoUpdateData)
+    {
+        await businessLogic.UpdateCompanyBrandingLogoAsync(companyId, companyBrandingLogoUpdateData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        return NoContent();
     }
 }

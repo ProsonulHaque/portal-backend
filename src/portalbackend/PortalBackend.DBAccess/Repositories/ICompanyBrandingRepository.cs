@@ -26,4 +26,6 @@ public interface ICompanyBrandingRepository
     Task<FileData> GetCompanyBrandingFileAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
 
     Task<string?> GetCompanyBrandingTextAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
+
+    Task<CompanyBrandingFile?> GetCompanyBrandingFileEntityAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
 }

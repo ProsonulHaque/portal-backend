@@ -6,8 +6,9 @@ namespace Org.Eclipse.TractusX.Portal.Backend.Administration.Service.BusinessLog
 
 public interface ICompanyBrandingBusinessLogic
 {
-    Task<(Guid logoId, Guid companyId)> SaveCompanyBrandingLogoAsync(CompanyBrandingLogoData companyBrandingLogoData, CancellationToken cancellationToken);
-    Task<(Guid footerId, Guid companyId)> SaveCompanyBrandingFooterAsync(CompanyBrandingFooterData companyBrandingFooterData);
+    Task<Guid> SaveCompanyBrandingLogoAsync(CompanyBrandingLogoData companyBrandingLogoData, CancellationToken cancellationToken);
+    Task<Guid> SaveCompanyBrandingFooterAsync(CompanyBrandingFooterData companyBrandingFooterData);
     Task<FileData> GetCompanyBrandingFileAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
     Task<string> GetCompanyBrandingTextAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
+    Task UpdateCompanyBrandingLogoAsync(Guid companyId, CompanyBrandingLogoUpdateData companyBrandingLogoData, CancellationToken cancellationToken);
 }
