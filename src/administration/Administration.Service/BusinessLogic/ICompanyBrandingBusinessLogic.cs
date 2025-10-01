@@ -10,5 +10,6 @@ public interface ICompanyBrandingBusinessLogic
     Task<Guid> SaveCompanyBrandingFooterAsync(CompanyBrandingFooterData companyBrandingFooterData);
     Task<FileData> GetCompanyBrandingFileAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
     Task<string> GetCompanyBrandingTextAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
-    Task UpdateCompanyBrandingLogoAsync(Guid companyId, CompanyBrandingLogoUpdateData companyBrandingLogoData, CancellationToken cancellationToken);
+    Task UpdateCompanyBrandingLogoAsync(Guid companyId, CompanyBrandingLogoUpdateData companyBrandingLogoUpdateData, CancellationToken cancellationToken);
+    Task UpdateCompanyBrandingFooterAsync(Guid companyId, CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData, CancellationToken cancellationToken);
 }

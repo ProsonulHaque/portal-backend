@@ -174,4 +174,24 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
         companyBrandingFileEntity.FileSizeInKiloByte = fileSizeInBytes / 1024;
         companyBrandingFileEntity.MediaTypeId = mediaTypeId;
     }
+
+    public async Task UpdateCompanyBrandingFooterAsync(Guid companyId, CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData, CancellationToken cancellationToken)
+    {
+        await CheckCompanyValidityAsync(companyId);
+        await CheckIfUserCompanyHasOperatorRoleAsync();
+
+        var companyBrandingTextEntity = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingTextEntityAsync(companyId, CompanyBrandingAssetTypeId.LOGO);
+
+        if (companyBrandingTextEntity == default)
+        {
+            throw NotFoundException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_ASSET_NOT_FOUND);
+        }
+
+        UpdateCompanyBrandingTextEntity(companyBrandingFooterUpdateData.Footer, companyBrandingTextEntity);
+
+        await portalRepositories.SaveAsync().ConfigureAwait(ConfigureAwaitOptions.None);
+    }
+
+    private static void UpdateCompanyBrandingTextEntity(string brandingText, CompanyBrandingText companyBrandingTextEntity) =>
+        companyBrandingTextEntity.BrandingText = brandingText;
 }

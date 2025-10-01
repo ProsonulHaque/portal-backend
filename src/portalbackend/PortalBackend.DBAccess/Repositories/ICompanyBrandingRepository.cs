@@ -28,4 +28,6 @@ public interface ICompanyBrandingRepository
     Task<string?> GetCompanyBrandingTextAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
 
     Task<CompanyBrandingFile?> GetCompanyBrandingFileEntityAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
+
+    Task<CompanyBrandingText?> GetCompanyBrandingTextEntityAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
 }

@@ -106,4 +106,19 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
 
         return NoContent();
     }
+
+    [HttpPut]
+    [Route("footer/{companyId}")]
+    [Authorize(Roles = "manage_branding_assets")]
+    [Authorize(Policy = PolicyTypes.ValidCompany)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateCompanyBrandingFooterAsync([FromRoute] Guid companyId, [FromForm] CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData)
+    {
+        await businessLogic.UpdateCompanyBrandingFooterAsync(companyId, companyBrandingFooterUpdateData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        return NoContent();
+    }
 }

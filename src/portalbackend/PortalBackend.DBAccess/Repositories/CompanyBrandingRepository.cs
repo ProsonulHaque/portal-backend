@@ -70,4 +70,6 @@ public class CompanyBrandingRepository(PortalDbContext portalDbContext) : ICompa
 
     public async Task<CompanyBrandingFile?> GetCompanyBrandingFileEntityAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId) =>
         await portalDbContext.CompanyBrandingFiles.FirstOrDefaultAsync(x => x.CompanyId == companyId && x.CompanyBrandingAssetTypeId == assetTypeId);
+    public async Task<CompanyBrandingText?> GetCompanyBrandingTextEntityAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId) =>
+        await portalDbContext.CompanyBrandingTexts.FirstOrDefaultAsync(x => x.CompanyId == companyId && x.CompanyBrandingAssetTypeId == assetTypeId);
 }
