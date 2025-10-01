@@ -13,4 +13,5 @@ public interface ICompanyBrandingBusinessLogic
     Task UpdateCompanyBrandingLogoAsync(Guid companyId, CompanyBrandingLogoUpdateData companyBrandingLogoUpdateData, CancellationToken cancellationToken);
     Task UpdateCompanyBrandingFooterAsync(Guid companyId, CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData);
     Task DeleteCompanyBrandingLogoAsync(Guid companyId);
+    Task DeleteCompanyBrandingFooterAsync(Guid companyId);
 }

@@ -32,4 +32,6 @@ public interface ICompanyBrandingRepository
     Task<CompanyBrandingText?> GetCompanyBrandingTextEntityAsync(Guid companyId, CompanyBrandingAssetTypeId assetTypeId);
 
     void DeleteCompanyBrandingFile(CompanyBrandingFile companyBrandingFile);
+
+    void DeleteCompanyBrandingText(CompanyBrandingText companyBrandingText);
 }

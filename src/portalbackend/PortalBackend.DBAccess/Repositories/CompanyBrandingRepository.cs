@@ -76,4 +76,7 @@ public class CompanyBrandingRepository(PortalDbContext portalDbContext) : ICompa
 
     public void DeleteCompanyBrandingFile(CompanyBrandingFile companyBrandingFile) =>
         portalDbContext.CompanyBrandingFiles.Remove(companyBrandingFile);
+
+    public void DeleteCompanyBrandingText(CompanyBrandingText companyBrandingText) =>
+        portalDbContext.CompanyBrandingTexts.Remove(companyBrandingText);
 }

@@ -208,4 +208,20 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
 
         await portalRepositories.SaveAsync().ConfigureAwait(ConfigureAwaitOptions.None);
     }
+
+    public async Task DeleteCompanyBrandingFooterAsync(Guid companyId)
+    {
+        await CheckIfUserCompanyHasOperatorRoleAsync();
+
+        var companyBrandingTextEntity = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingTextEntityAsync(companyId, CompanyBrandingAssetTypeId.FOOTER);
+
+        if (companyBrandingTextEntity == default)
+        {
+            throw NotFoundException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_ASSET_NOT_FOUND);
+        }
+
+        portalRepositories.GetInstance<ICompanyBrandingRepository>().DeleteCompanyBrandingText(companyBrandingTextEntity);
+
+        await portalRepositories.SaveAsync().ConfigureAwait(ConfigureAwaitOptions.None);
+    }
 }
