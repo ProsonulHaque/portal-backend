@@ -139,7 +139,6 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
 
     public async Task UpdateCompanyBrandingLogoAsync(Guid companyId, CompanyBrandingLogoUpdateData companyBrandingLogoUpdateData, CancellationToken cancellationToken)
     {
-        await CheckCompanyValidityAsync(companyId);
         await CheckIfUserCompanyHasOperatorRoleAsync();
 
         var fileSizeInBytes = companyBrandingLogoUpdateData.CompanyLogoFile.Length;
@@ -175,9 +174,8 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
         companyBrandingFileEntity.MediaTypeId = mediaTypeId;
     }
 
-    public async Task UpdateCompanyBrandingFooterAsync(Guid companyId, CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData, CancellationToken cancellationToken)
+    public async Task UpdateCompanyBrandingFooterAsync(Guid companyId, CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData)
     {
-        await CheckCompanyValidityAsync(companyId);
         await CheckIfUserCompanyHasOperatorRoleAsync();
 
         var companyBrandingTextEntity = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingTextEntityAsync(companyId, CompanyBrandingAssetTypeId.LOGO);
@@ -194,4 +192,20 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
 
     private static void UpdateCompanyBrandingTextEntity(string brandingText, CompanyBrandingText companyBrandingTextEntity) =>
         companyBrandingTextEntity.BrandingText = brandingText;
+
+    public async Task DeleteCompanyBrandingLogoAsync(Guid companyId)
+    {
+        await CheckIfUserCompanyHasOperatorRoleAsync();
+
+        var companyBrandingFileEntity = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingFileEntityAsync(companyId, CompanyBrandingAssetTypeId.LOGO);
+
+        if (companyBrandingFileEntity == default)
+        {
+            throw NotFoundException.Create(AdministrationCompanyBrandingErrors.COMPANY_BRANDING_ASSET_NOT_FOUND);
+        }
+
+        portalRepositories.GetInstance<ICompanyBrandingRepository>().DeleteCompanyBrandingFile(companyBrandingFileEntity);
+
+        await portalRepositories.SaveAsync().ConfigureAwait(ConfigureAwaitOptions.None);
+    }
 }

@@ -117,7 +117,22 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateCompanyBrandingFooterAsync([FromRoute] Guid companyId, [FromForm] CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData)
     {
-        await businessLogic.UpdateCompanyBrandingFooterAsync(companyId, companyBrandingFooterUpdateData, CancellationToken.None).ConfigureAwait(ConfigureAwaitOptions.None);
+        await businessLogic.UpdateCompanyBrandingFooterAsync(companyId, companyBrandingFooterUpdateData).ConfigureAwait(ConfigureAwaitOptions.None);
+
+        return NoContent();
+    }
+
+    [HttpDelete]
+    [Route("logo/{companyId}")]
+    [Authorize(Roles = "manage_branding_assets")]
+    [Authorize(Policy = PolicyTypes.ValidCompany)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteCompanyBrandingLogoAsync([FromRoute] Guid companyId)
+    {
+        await businessLogic.DeleteCompanyBrandingLogoAsync(companyId).ConfigureAwait(ConfigureAwaitOptions.None);
 
         return NoContent();
     }
