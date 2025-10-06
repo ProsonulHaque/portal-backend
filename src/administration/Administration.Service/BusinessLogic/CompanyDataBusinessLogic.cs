@@ -478,4 +478,7 @@ public class CompanyDataBusinessLogic(
         context.FinalizeProcessStep();
         await portalRepositories.SaveAsync().ConfigureAwait(ConfigureAwaitOptions.None);
     }
+
+    public async Task<CompanyDdl> GetComapanyDdlAsync() => 
+        await portalRepositories.GetInstance<ICompanyRepository>().GetCompanyDdlAsync().ConfigureAwait(ConfigureAwaitOptions.None);
 }

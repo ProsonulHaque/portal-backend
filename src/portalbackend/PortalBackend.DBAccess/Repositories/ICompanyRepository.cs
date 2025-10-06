@@ -186,4 +186,6 @@ public interface ICompanyRepository
     Task<bool> IsExistingCompany(Guid companyId);
     Task<(bool Exists, Guid CompanyId, IEnumerable<Guid> SubmittedCompanyApplicationId)> GetCompanyIdByBpn(string bpn);
     Task<VerifyProcessData<ProcessTypeId, ProcessStepTypeId>?> GetSelfDescriptionProcessDataForCompanyId(Guid companyId);
+
+    Task<CompanyDdl> GetCompanyDdlAsync();
 }

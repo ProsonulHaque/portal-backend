@@ -496,4 +496,18 @@ public class CompanyRepository(PortalDbContext context) : ICompanyRepository
                 c.SdCreationProcess,
                 c.SdCreationProcess!.ProcessSteps.Where(step => step.ProcessStepStatusId == ProcessStepStatusId.TODO)))
             .SingleOrDefaultAsync();
+    public async Task<CompanyDdl> GetCompanyDdlAsync()
+    {
+        var companies = await context.Companies.Select(x => new CompanyDdlData
+        (
+            x.Id,
+            x.Name
+        ))
+        .ToListAsync();
+
+        return new CompanyDdl
+        (
+            companies
+        );
+    }
 }

@@ -55,4 +55,6 @@ public interface ICompanyDataBusinessLogic
     Task RetriggerSelfDescriptionCreation(Guid processId);
     Task RetriggerSelfDescriptionResponseCreation(Guid processId);
     Task TriggerSelfDescriptionCreation();
+
+    Task<CompanyDdl> GetComapanyDdlAsync();
 }

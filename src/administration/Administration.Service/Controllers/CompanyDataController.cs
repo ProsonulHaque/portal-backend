@@ -405,4 +405,16 @@ public class CompanyDataController(ICompanyDataBusinessLogic logic) : Controller
         await logic.RetriggerSelfDescriptionResponseCreation(processId).ConfigureAwait(false);
         return NoContent();
     }
+
+    [HttpGet]
+    [Route("companyDdl")]
+    [Authorize(Roles = "CX Admin")]
+    [Authorize(Policy = PolicyTypes.ValidCompany)]
+    [ProducesResponseType(typeof(CompanyDdl), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetComapanyDdlDataAsync()
+    {
+        var companyDdlData = await logic.GetComapanyDdlAsync().ConfigureAwait(ConfigureAwaitOptions.None);
+
+        return Ok(companyDdlData);
+    }
 }
