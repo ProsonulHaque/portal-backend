@@ -115,7 +115,7 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateCompanyBrandingFooterAsync([FromRoute] Guid companyId, [FromForm] CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData)
+    public async Task<IActionResult> UpdateCompanyBrandingFooterAsync([FromRoute] Guid companyId, [FromBody] CompanyBrandingFooterUpdateData companyBrandingFooterUpdateData)
     {
         await businessLogic.UpdateCompanyBrandingFooterAsync(companyId, companyBrandingFooterUpdateData).ConfigureAwait(ConfigureAwaitOptions.None);
 
