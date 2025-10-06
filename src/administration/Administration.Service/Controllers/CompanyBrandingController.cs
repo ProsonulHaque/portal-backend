@@ -93,7 +93,7 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     }
 
     [HttpPut]
-    [Route("logo/{companyId}")]
+    [Route("logo/company/{companyId}")]
     [Authorize(Roles = "manage_branding_assets")]
     [Authorize(Policy = PolicyTypes.ValidCompany)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -108,7 +108,7 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     }
 
     [HttpPut]
-    [Route("footer/{companyId}")]
+    [Route("footer/company/{companyId}")]
     [Authorize(Roles = "manage_branding_assets")]
     [Authorize(Policy = PolicyTypes.ValidCompany)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -123,7 +123,7 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     }
 
     [HttpDelete]
-    [Route("logo/{companyId}")]
+    [Route("logo/company/{companyId}")]
     [Authorize(Roles = "manage_branding_assets")]
     [Authorize(Policy = PolicyTypes.ValidCompany)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -138,7 +138,7 @@ public class CompanyBrandingController(ICompanyBrandingBusinessLogic businessLog
     }
 
     [HttpDelete]
-    [Route("footer/{companyId}")]
+    [Route("footer/company/{companyId}")]
     [Authorize(Roles = "manage_branding_assets")]
     [Authorize(Policy = PolicyTypes.ValidCompany)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
