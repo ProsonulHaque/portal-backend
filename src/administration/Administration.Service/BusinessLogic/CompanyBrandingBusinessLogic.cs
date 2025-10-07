@@ -178,7 +178,7 @@ public class CompanyBrandingBusinessLogic(IPortalRepositories portalRepositories
     {
         await CheckIfUserCompanyHasOperatorRoleAsync();
 
-        var companyBrandingTextEntity = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingTextEntityAsync(companyId, CompanyBrandingAssetTypeId.LOGO);
+        var companyBrandingTextEntity = await portalRepositories.GetInstance<ICompanyBrandingRepository>().GetCompanyBrandingTextEntityAsync(companyId, CompanyBrandingAssetTypeId.FOOTER);
 
         if (companyBrandingTextEntity == default)
         {
